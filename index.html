@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/favicon.png">
+<title>Piki — Music Prediction Market</title>
+<meta name="description" content="Put money behind your music taste. Piki is a music prediction market powered by 6M+ ratings and real math.">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--gold:#F5C518;--gold-dim:#c9a20e;--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--text:#e8e8e8;--text-dim:#999;--radius:12px}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.6;overflow-x:hidden}
+a{color:var(--gold);text-decoration:none;transition:color .2s}
+a:hover{color:#fff}
+section{padding:100px 24px}
+.container{max-width:1100px;margin:0 auto}
+h2{font-size:clamp(2rem,5vw,3rem);font-weight:800;margin-bottom:1rem;letter-spacing:-1px}
+h3{font-size:1.3rem;font-weight:700;margin-bottom:.5rem}
+.gold{color:var(--gold)}
+.tag{display:inline-block;background:var(--gold);color:#000;font-weight:700;font-size:.75rem;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo img{height:78px;display:block;margin:-13px 0}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--text-dim);font-size:.85rem;font-weight:500}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:var(--gold)!important;color:#000!important;padding:8px 18px;border-radius:8px;font-weight:700;font-size:.85rem}
+.nav-cta:hover{background:#fff!important}
+@media(max-width:640px){.nav-links a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:100px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 40%,rgba(245,197,24,.08) 0%,transparent 50%);pointer-events:none}
+.hero h1{font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;letter-spacing:-2px;line-height:1.05;margin-bottom:1.5rem}
+.hero h1 .line2{display:block;background:linear-gradient(90deg,var(--gold),#ff9f43);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(1.1rem,2.5vw,1.4rem);color:var(--text-dim);max-width:600px;margin:0 auto 2.5rem}
+.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:var(--radius);font-weight:700;font-size:1rem;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--gold);color:#000}
+.btn-primary:hover{color:#000;box-shadow:0 8px 30px rgba(245,197,24,.3)}
+.btn-secondary{background:var(--bg3);color:#fff;border:1px solid rgba(255,255,255,.1)}
+.btn-secondary:hover{color:#fff;border-color:var(--gold)}
+.hero-stat{margin-top:3.5rem;display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.hero-stat div{text-align:center}
+.hero-stat .num{font-size:2.2rem;font-weight:900;color:var(--gold)}
+.hero-stat .label{font-size:.8rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
+
+/* HOW IT WORKS */
+.how{background:var(--bg2)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px;margin-top:3rem}
+.step{background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:32px;position:relative;transition:border-color .3s}
+.step:hover{border-color:var(--gold)}
+.step-num{position:absolute;top:-16px;left:24px;background:var(--gold);color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem}
+.step-icon{font-size:2.2rem;margin-bottom:1rem}
+.step p{color:var(--text-dim);font-size:.95rem}
+
+/* EXAMPLE BET */
+.bet-card{width:252px;aspect-ratio:9/16;margin:3rem auto 0;border-radius:16px;text-align:center;position:relative;overflow:hidden}
+.bet-card video{width:100%;height:100%;position:absolute;top:0;left:0;object-fit:cover;z-index:0}
+.bet-card-overlay{position:absolute;bottom:0;left:0;right:0;z-index:1;padding:20px 16px;background:linear-gradient(transparent,rgba(0,0,0,.75) 30%);backdrop-filter:blur(2px)}
+.bet-card .song{font-size:1rem;font-weight:700;margin-bottom:2px;color:#fff}
+.bet-card .artist{color:rgba(255,255,255,.7);font-size:.85rem;margin-bottom:1rem}
+.bet-question{font-size:.9rem;font-weight:600;margin-bottom:1rem;color:var(--gold)}
+.bet-options{display:flex;gap:10px;justify-content:center}
+.bet-opt{flex:1;padding:10px;border-radius:8px;font-weight:700;font-size:.9rem;text-align:center}
+.bet-yes{background:rgba(46,213,115,.2);border:1px solid #2ed573;color:#2ed573}
+.bet-no{background:rgba(255,71,87,.2);border:1px solid #ff4757;color:#ff4757}
+.bet-note{margin-top:.8rem;font-size:.75rem;color:rgba(255,255,255,.5)}
+
+/* DATA */
+.data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;margin-top:3rem}
+.data-card{background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:32px}
+.data-card .icon{font-size:2rem;margin-bottom:1rem}
+.data-card p{color:var(--text-dim);font-size:.95rem}
+
+/* COINBASE */
+.coinbase{background:var(--bg2);text-align:center}
+.cb-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,82,255,.15);border:1px solid rgba(0,82,255,.4);padding:8px 20px;border-radius:20px;font-size:.85rem;font-weight:600;color:#4d9aff;margin-bottom:1.5rem}
+.coinbase p{color:var(--text-dim);max-width:600px;margin:0 auto 2rem;font-size:1.1rem}
+.cb-features{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+.cb-feat{background:var(--bg);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:20px 28px;font-size:.95rem;font-weight:600}
+
+/* RESEARCH */
+.papers{display:grid;gap:20px;margin-top:3rem}
+.paper{display:block;background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:28px 32px;transition:border-color .3s,transform .2s}
+.paper:hover{border-color:var(--gold);transform:translateY(-2px);color:#fff}
+.paper .paper-tag{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--gold);font-weight:700;margin-bottom:6px}
+.paper .paper-title{font-size:1.15rem;font-weight:700;margin-bottom:6px}
+.paper .paper-desc{color:var(--text-dim);font-size:.9rem}
+.paper .paper-link{color:var(--gold);font-size:.85rem;margin-top:8px;display:inline-block}
+
+/* CTA */
+.cta-section{text-align:center;background:var(--bg2);position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(245,197,24,.06) 0%,transparent 60%);pointer-events:none}
+.cta-section h2{margin-bottom:.5rem}
+.cta-section p{color:var(--text-dim);margin-bottom:2.5rem;font-size:1.1rem}
+.cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* FOOTER */
+footer{padding:48px 24px;border-top:1px solid rgba(255,255,255,.06);text-align:center}
+.footer-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.footer-links a{color:var(--text-dim);font-size:.9rem}
+.footer-copy{color:var(--text-dim);font-size:.8rem}
+
+/* MOBILE */
+@media(max-width:768px){
+section{padding:64px 16px}
+.hero h1{font-size:clamp(2rem,8vw,3.2rem);letter-spacing:-1px}
+.hero-sub{font-size:1rem}
+.hero-stat{gap:24px}
+.hero-stat .num{font-size:1.6rem}
+.btn{padding:14px 24px;font-size:.9rem}
+.steps{grid-template-columns:1fr;gap:20px}
+.data-grid{grid-template-columns:1fr;gap:20px}
+.bet-card{padding:24px;margin-top:2rem}
+.bet-options{flex-direction:column;gap:10px}
+.cb-features{flex-direction:column;align-items:center;gap:12px}
+.nav-logo img{height:40px}
+h2{font-size:clamp(1.6rem,6vw,2.4rem)}
+.cta-buttons{flex-direction:column;align-items:center}
+}
+@media(max-width:480px){
+.hero{padding-top:80px}
+.hero-stat{flex-direction:column;gap:16px}
+.footer-links{flex-direction:column;gap:12px}
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><img src="piki_logo.png" alt="Piki"></div>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#data">The Math</a>
+    <a href="#research">Research</a>
+    <a href="#download" class="nav-cta">Get Piki</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="container">
+    <div class="tag">Music Prediction Market</div>
+    <h1>Put Money Behind<span class="line2">Your Music Taste</span></h1>
+    <p class="hero-sub">Predict which songs people will love. Get paid in stablecoins when you're right. Powered by 6M+ real ratings — not vibes, math.</p>
+    <div class="hero-buttons">
+      <a href="#download" class="btn btn-primary" id="hero-cta">Start Predicting</a>
+      <a href="#how" class="btn btn-secondary">How It Works</a>
+    </div>
+    <div class="hero-stat">
+      <div><div class="num">6M+</div><div class="label">Ratings</div></div>
+      <div><div class="num">6</div><div class="label">Years of Data</div></div>
+      <div><div class="num">$12,000</div><div class="label">Stablecoin Payouts</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="container">
+    <h2>How Predictions Work</h2>
+    <p style="color:var(--text-dim);max-width:600px;font-size:1.1rem">Rate songs, make predictions, earn real money. It's that simple.</p>
+    <div class="steps">
+      <div class="step fade-in">
+        <div class="step-num">1</div>
+        <h3>Listen & Rate</h3>
+        <p>Swipe through songs — like or dislike. Every rating earns you stablecoins and feeds the prediction engine.</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-num">2</div>
+        <h3>See the Odds</h3>
+        <p>Each song has a fair price computed from 6M+ past ratings. You see exactly what the data says before you bet.</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-num">3</div>
+        <h3>Make Your Prediction</h3>
+        <p>"More than 6 of the next 10 users will like this song." If you're right, you win. Real stakes, real payouts.</p>
+      </div>
+      <div class="step fade-in">
+        <div class="step-num">4</div>
+        <h3>Get Paid</h3>
+        <p>Winnings paid in stablecoins. Your taste in music is worth real money.</p>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:3rem">
+      <div class="bet-card fade-in" style="margin:0">
+        <video src="5721.mp4" autoplay muted loop playsinline></video>
+        <div class="bet-card-overlay">
+          <div class="song">💿 "Man of the Year"</div>
+          <div class="artist">by ScHoolboy Q</div>
+          <div class="bet-question">How many of the next 10 users will like this song?</div>
+          <div class="bet-options">
+            <div class="bet-opt bet-no">3 or less</div>
+            <div class="bet-opt bet-yes">5 or more</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bet-card fade-in" style="margin:0">
+        <video src="1762770.mp4" autoplay muted loop playsinline></video>
+        <div class="bet-card-overlay">
+          <div class="song">💿 "I'm Going to Make a Cake"</div>
+          <div class="artist">by Philip Glass</div>
+          <div class="bet-question">How many of the next 10 users will like this song?</div>
+          <div class="bet-options">
+            <div class="bet-opt bet-no">4 or less</div>
+            <div class="bet-opt bet-yes">6 or more</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bet-card fade-in" style="margin:0">
+        <video src="4096723.mp4" autoplay muted loop playsinline></video>
+        <div class="bet-card-overlay">
+          <div class="song">💿 "Delicate"</div>
+          <div class="artist">by Taylor Swift</div>
+          <div class="bet-question">How many of the next 10 users will like this song?</div>
+          <div class="bet-options">
+            <div class="bet-opt bet-no">5 or less</div>
+            <div class="bet-opt bet-yes">7 or more</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="data">
+  <div class="container">
+    <h2>This Isn't Guessing.<br><span class="gold">It's Math.</span></h2>
+    <p style="color:var(--text-dim);max-width:600px;font-size:1.1rem">6 million ratings on a huge variety of songs — likes <em>and</em> dislikes — give us something no one else has.</p>
+    <div class="data-grid">
+      <div class="data-card fade-in">
+        <h3>Likes + Dislikes</h3>
+        <p>Spotify and YouTube only track what you play. Piki collects explicit dislikes too — making our recommendations fundamentally better.</p>
+      </div>
+      <div class="data-card fade-in">
+        <h3>Fair Pricing</h3>
+        <p>Every song's prediction odds are computed from real historical data. Not set by a bookie — set by math.</p>
+      </div>
+      <div class="data-card fade-in">
+        <h3>Research-Backed</h3>
+        <p>Built by a math professor. Three published academic papers prove the model works. This is peer-reviewed prediction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="research">
+  <div class="container">
+    <h2>The Research</h2>
+    <p style="color:var(--text-dim);max-width:600px;font-size:1.1rem">Three published papers on SSRN. The science behind the market.</p>
+    <div class="papers">
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4562658" target="_blank" rel="noopener" class="paper fade-in">
+        <div class="paper-tag">SSRN Paper</div>
+        <div class="paper-title">How Piki Measures Song Quality</div>
+        <div class="paper-desc">Superlikes are highest for lower-stream artists — proving Piki surfaces quality that streaming counts miss.</div>
+        <span class="paper-link">Read on SSRN →</span>
+      </a>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3919046" target="_blank" rel="noopener" class="paper fade-in">
+        <div class="paper-tag">SSRN Paper</div>
+        <div class="paper-title">Why Dislikes Improve Recommendations</div>
+        <div class="paper-desc">Negative feedback dramatically improves recommendation algorithms — and almost no one collects it.</div>
+        <span class="paper-link">Read on SSRN →</span>
+      </a>
+      <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5522600" target="_blank" rel="noopener" class="paper fade-in">
+        <div class="paper-tag">SSRN Paper</div>
+        <div class="paper-title">How the Market Values Music Catalogs</div>
+        <div class="paper-desc">A discounted cashflow model for valuing music catalogs — the financial foundation of fair song pricing.</div>
+        <span class="paper-link">Read on SSRN →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="download">
+  <div class="container" style="position:relative">
+    <div class="tag">Get Started</div>
+    <h2>Your Taste Has Value.<br><span class="gold">Prove It.</span></h2>
+    <p>Download Piki or open Mini-Piki in Coinbase Wallet.</p>
+    <div class="cta-buttons">
+      <a href="https://apps.apple.com/us/app/piki-music-finder/id1465962793" class="btn btn-primary download-ios">🍎 App Store</a>
+      <a href="https://play.google.com/store/apps/details?id=com.museiq.piki&hl=en_US" class="btn btn-primary download-android">▶ Google Play</a>
+      <a href="https://base.app/app/mini-piki.vercel.app" target="_blank" rel="noopener" class="btn btn-secondary">⬡ Open in Coinbase Wallet</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://www.instagram.com/piki.nyc/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://twitter.com/pikinyc" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://t.me/pikinyc" target="_blank" rel="noopener">Telegram</a>
+      <a href="mailto:info@piki.nyc">info@piki.nyc</a>
+    </div>
+    <div class="footer-copy">© 2026 Piki LLC. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+// Platform-aware download buttons
+const ua=navigator.userAgent||navigator.vendor||window.opera;
+const isIOS=/iPad|iPhone|iPod/.test(ua)&&!window.MSStream;
+const isAndroid=/android/i.test(ua);
+if(isIOS){document.querySelectorAll('.download-android').forEach(el=>el.style.display='none')}
+else if(isAndroid){document.querySelectorAll('.download-ios').forEach(el=>el.style.display='none')}
+</script>
+</body>
+</html>

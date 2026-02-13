@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+     <link rel="icon" type="image/png" href="/favicon.png" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <meta name="google-site-verification" content="5BZtqpKNZqIKdO9TBmnbWUCDNw1BRelbMaDwXmP4K8U" />
+  
+    <title>Piki</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+ 
+   
+
+    <script type="module" crossorigin src="/assets/index-Lj1Rjea3.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-nB647SY-.css">
+  </head>
+  <body>  
+ 
+    <div id="root"></div>
+    <div id="overlay"></div>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WQ1ZEHNBTG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-WQ1ZEHNBTG');
+    </script>
+  </body>
+</html>
